@@ -1,0 +1,80 @@
+{
+    "app-id": "com.devcafe.app",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "43",
+    "sdk": "org.gnome.Sdk",
+    "command": "devcafe",
+    "separate-locales": false,
+    "finish-args": [
+        "--share=ipc",
+        "--socket=x11",
+        "--socket=fallback-x11",
+        "--socket=wayland",
+        "--socket=pulseaudio",
+        "--share=network",
+        "--device=all",
+        "--filesystem=xdg-download",
+        "--talk-name=org.freedesktop.Notifications",
+        "--own-name=com.devcafe.app_example"
+    ],
+    "modules": [
+        {
+            "name": "libjsoncpp",
+            "buildsystem": "cmake",
+            "only_arches": [
+                "aarch64"
+            ],
+            "config-opts": [
+                "-DCMAKE_BUILD_TYPE=release",
+                "-DBUILD_SHARED_LIBS=ON"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/open-source-parsers/jsoncpp/archive/refs/tags/1.7.5.tar.gz",
+                    "sha256": "4338c6cab8af8dee6cdfd54e6218bd0533785f552c6162bb083f8dd28bf8fbbe"
+                }
+            ]
+        },
+        {
+            "name": "devcafe",
+            "buildsystem": "cmake",
+            "only-arches": [
+                "aarch64"
+            ],
+            "build-commands": [
+                "ls devcafe_app",
+                "cp -r devcafe_app /app/devcafe",
+                "chmod +x /app/devcafe",
+                "install -Dm644 logo.svg /app/share/icons/hicolor/scalable/apps/com.devcafe.app.svg",
+                "mkdir -p /app/bin",
+                "ln -s /app/devcafe/devcafe_app /app/bin/devcafe",
+                "if [ $(arch) == \"aarch64\"  ]; then sed -si \"/Exec=/cExec=env GDK_GL=gles devcafe %U\" com.devcafe.app.desktop; fi",
+                "install -Dm644 com.devcafe.app.desktop /app/share/applications/com.devcafe.app.desktop",
+                "install -Dm644 com.devcafe.app.metainfo.xml /app/share/appdata/com.devcafe.app.metainfo.xml"
+            ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "only-arches": [
+                        "aarch64"
+                    ],
+                    "path": "./build.tar.gz",
+                    "dest": "devcafe_app"
+                },
+                {
+                    "type": "file",
+                    "path": "com.devcafe.app.metainfo.xml"
+                },
+                {
+                    "type": "file",
+                    "path": "com.devcafe.app.desktop"
+                },
+                {
+                    "type": "file",
+                    "path": "logo.svg"
+                }
+            ]
+        }
+    ]
+}
