@@ -38,18 +38,17 @@
         },
         {
             "name": "devcafe",
-            "buildsystem": "cmake",
+            "buildsystem": "simple",
             "only-arches": [
                 "aarch64"
             ],
             "build-commands": [
-                "ls devcafe_app",
                 "cp -r devcafe_app /app/devcafe",
-                "chmod +x /app/devcafe",
+                "chmod +x /app/devcafe/decafe",
                 "install -Dm644 logo.svg /app/share/icons/hicolor/scalable/apps/com.devcafe.app.svg",
                 "mkdir -p /app/bin",
-                "ln -s /app/devcafe/devcafe_app /app/bin/devcafe",
-                "if [ $(arch) == \"aarch64\"  ]; then sed -si \"/Exec=/cExec=env GDK_GL=gles devcafe %U\" com.devcafe.app.desktop; fi",
+                "ln -s /app/devcafe/devcafe /app/bin/devcafe",
+                "if [ $(arch) == \"aarch64\"  ]; then sed -si \"/Exec=/cExec=env GDK_GL=gles flatpakrun com.devcafe.app %U\" com.devcafe.app.desktop; fi",
                 "install -Dm644 com.devcafe.app.desktop /app/share/applications/com.devcafe.app.desktop",
                 "install -Dm644 com.devcafe.app.metainfo.xml /app/share/appdata/com.devcafe.app.metainfo.xml"
             ],
